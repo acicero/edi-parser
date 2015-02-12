@@ -5,59 +5,52 @@
 
 var express = require('express'),
   bodyParser = require('body-parser'),
-  //methodOverride = require('method-override'),
   routes = require('./routes'),
   api = require('./routes/api'),
   http = require('http'),
   path = require('path');
 
-var app = module.exports = express();
+var multer = require('multer')
+
+var app = express();
 
 
 /**
  * Configuration
  */
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-app.use(bodyParser.json());
-//app.use(methodOverride());
-app.use(express.static(path.join(__dirname, 'public')));
-
-var env = process.env.NODE_ENV || 'development';
-
-// development only
-
-// production only
-if (env === 'production') {
-  // TODO
+/*Multer configuration*/
+app.use(multer({ dest: './uploads/',
+ rename: function (fieldname, filename) {
+    return filename+Date.now();
+  },
+onFileUploadStart: function (file) {
+  console.log(file.originalname + ' is starting ...')
+},
+onFileUploadComplete: function (file) {
+  console.log(file.fieldname + ' uploaded to  ' + file.path)
+  done=true;
 }
+}));
 
 
-/**
- * Routes
- */
+/*Routes*/
 
-// serve index and view partials
-app.get('/', routes.index);
-app.get('/partials/:name', routes.partials);
+app.get('/', function(req, res){
+	res.sendfile("index.html");
+});
 
-// JSON API
-app.get('/api/name', api.name);
-
-// redirect all others to the index (HTML5 history)
-app.get('*', routes.index);
-
+app.post('/api/upload', function(req, res){
+	if(done==true){
+		console.log(req.files);
+		res.end("File uploaded");
+	}
+});
 
 /**
  * Start Server
  */
 
-http.createServer(app).listen(app.get('port'), function () {
-  console.log('Express server listening on port ' + app.get('port'));
+http.createServer(app).listen(3000, function () {
+  console.log('Express server listening on port ' + 3000);
 });

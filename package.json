@@ -9,6 +9,7 @@
     "express": "^4.11.2",
     "jade": "^0.31.2",
     "method-override": "^1.0.0",
-    "morgan": "^1.0.0"
+    "morgan": "^1.0.0",
+    "multer": "^0.1.7"
   }
 }
