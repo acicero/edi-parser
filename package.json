@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
+    "adm-zip": "^0.4.7",
     "body-parser": "^1.11.0",
     "error-handler": "^0.1.4",
     "errorhandler": "^1.3.3",
