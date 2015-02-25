@@ -13,6 +13,13 @@ fs.readFile(file, 'utf8', function(err, data){
 	if(err){
 		return console.log(err)
 	}
+	get_delimiters(data);
+	
+});
+
+function get_delimiters(text){
+	var data = text;
+	
 	console.log('File has been read successfully.');
 	length = data.length;
 	console.log('File length: ' + length + ' characters');
@@ -23,4 +30,4 @@ fs.readFile(file, 'utf8', function(err, data){
 	recordDelim = data.charAt(105);
 	console.log('recordDelim value: ' + recordDelim);
 	
-});
+}
