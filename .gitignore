@@ -29,3 +29,9 @@ node_modules
 
 #upload dir
 uploads
+
+#xml dir
+XML
+
+#DS_Store (macs)
+.DS_Store

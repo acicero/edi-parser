@@ -14,6 +14,8 @@ fs.readFile(file, 'utf8', function(err, data){
 		return console.log(err)
 	}
 	get_delimiters(data);
+	is_valid(data);
+	make_newlines(data);
 	
 });
 
@@ -30,4 +32,26 @@ function get_delimiters(text){
 	recordDelim = data.charAt(105);
 	console.log('recordDelim value: ' + recordDelim);
 	
+}
+
+//function returns 0 if EDI is invalid
+//returns 1 if valid
+function is_valid(text){
+	var data = text;
+	if (data.search(/ISA/) == 0){
+	  console.log("ISA found at index 0");
+	  return true;
+	}
+	else {
+		console.log("ISA not found at index 0, file not valid");
+		return false;
+	}
+}
+
+//function replaces recordDelim character with newline characters
+function make_newlines(data){
+	var re = new RegExp(recordDelim,"g");
+	var replaced = data.replace(re, recordDelim + "\n");
+	console.log(replaced);
+
 }
