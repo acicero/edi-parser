@@ -6,29 +6,32 @@ function FileManager(fileDirectory){
 
 	/*
 	 * Extract the contents of the zip folder into the same directory
-	 * it is located.
+	 * the zip folder is located.
 	 */
 	this.extract = function(){
-		this.fileDirectory.extractAllTo(__dirname,true);
+		fileDirectory.extractAllTo(__dirname,true);
 	}
 
 	/*
 	 * List the name of each file in the provided zip folder.
-	 * At this point, it should read all the file's properties
 	 */
 	this.list = function(){
+		var array = [];
 		filesInFolder.forEach(function(currentEntry){
-			console.log(currentEntry.entryName);
+			array.push(currentEntry.entryName);
 		});
+		return array;
 	}
 
 	/*
 	 * Read the contents of the current file.
 	 */
 	this.read = function(){
+		var array = [];
 		filesInFolder.forEach(function(currentEntry){
-			console.log(fileDirectory.readAsText(currentEntry));
+			array.push(fileDirectory.readAsText(currentEntry));
 		});
+		return array;
 	}
 
 	/*
@@ -45,25 +48,15 @@ function FileManager(fileDirectory){
 	}
 }
 
-/*
- * Load the zip folder.
- * At this point, it uses a hard-coded zip folder.
- * The .getEntries() method lets you access the files
- * without unzipping the folder
- *
- * These commented out lines of code come from testing before this code
- * was implemented as a JavaScript class.
-var zipFolder = new admZip(__dirname + "/SampleData.zip");
-var zipFiles = zipFolder.getEntries();
-
-//Go through each file in the unzipped folder
-zipFiles.forEach(function(zipEntry){
-	console.log(zipEntry.toString());
-});
- */
-
+var output;
 var sample = new FileManager(__dirname + "/SampleData.zip");
+
 //sample.extract();
-sample.list();
-sample.read();
+
+output = sample.list();
+console.log(output);
+
+output = sample.read();
+console.log(output);
+
 sample.parseEDI();
