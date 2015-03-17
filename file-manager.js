@@ -3,6 +3,7 @@ var admZip = require('adm-zip');
 function FileManager(fileDirectory){
 	var fileDirectory = new admZip(fileDirectory);
 	var filesInFolder = fileDirectory.getEntries();
+	var count = 0;
 
 	/*
 	 * Extract the contents of the zip folder into the same directory
@@ -23,15 +24,25 @@ function FileManager(fileDirectory){
 		return array;
 	}
 
+	this.numberOfFiles = function(){
+		return filesInFolder.length;
+	}
+
 	/*
 	 * Read the contents of the current file.
 	 */
 	this.read = function(){
-		var array = [];
+		if(count < filesInFolder.length){
+			return fileDirectory.readAsText(filesInFolder[count++]);
+		}else{
+			console.log("You have read through all the files");
+		}
+
+		/*var array = [];
 		filesInFolder.forEach(function(currentEntry){
 			array.push(fileDirectory.readAsText(currentEntry));
 		});
-		return array;
+		return array;*/
 	}
 
 	/*
@@ -40,23 +51,32 @@ function FileManager(fileDirectory){
 	 * Future code may include a clause that checks to make sure
 	 * the file being passed is indeed an EDI file.
 	 */
-	this.parseEDI = function(){
+
+	//May consider removing this function
+	/*this.parseEDI = function(){
 		filesInFolder.forEach(function(currentEntry){
 			//Pass currentEntry to the parser portion of the code
 			console.log("Feature shall be added in future updates.");
 		});
-	}
+	}*/
 }
 
 var output;
 var sample = new FileManager(__dirname + "/SampleData.zip");
 
 //sample.extract();
+for(var i = 0; i < sample.numberOfFiles(); i++){
+	console.log("Output for file number " + i + ":\n" + sample.read() + "\n\n");
+}
 
 output = sample.list();
 console.log(output);
 
-output = sample.read();
-console.log(output);
+//Done to test if read() goes beyond array bounds
+sample.read();
+sample.read();
 
-sample.parseEDI();
+//output = sample.read();
+//console.log(output);
+
+//sample.parseEDI();
