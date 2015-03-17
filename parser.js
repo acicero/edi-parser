@@ -4,7 +4,7 @@
 
 var file = 'uploads/Fedex850.txt'; // hardcoded file for now
 var length = 0;
-var fieldDelim;
+var fieldDelim = "d";
 var subfieldDelim;
 var recordDelim;
 
@@ -13,7 +13,7 @@ fs.readFile(file, 'utf8', function(err, data){
 	if(err){
 		return console.log(err)
 	}
-	get_delimiters(data);
+	//get_delimiters(data);
 	is_valid(data);
 	process_data(data);
 	get_edi_type(data);
@@ -64,13 +64,10 @@ function process_data(data){
 }
 
 function get_edi_type(data){
-	//var pattern = new RegExp("ST\*(.*)\*");
-	//var result = pattern.exec(data);
-	//console.log(result[0]);
 	
-	var pattern = /ST\*(\d+)\*/;
-	var result = pattern.exec(data);
-	//console.log(result[1]);
+	var pattern = /ST.(\d+)./;
+	var result = data.match(pattern);
+	console.log(result[1]);
 	return result[1];
 
 }
