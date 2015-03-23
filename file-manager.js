@@ -14,7 +14,7 @@ function FileManager(fileDirectory){
 	}
 
 	/*
-	 * List the name of each file in the provided zip folder.
+	 * Return an array that gives the name of every file in the zip folder.
 	 */
 	this.list = function(){
 		var array = [];
@@ -24,41 +24,24 @@ function FileManager(fileDirectory){
 		return array;
 	}
 
+	/*
+	 * Returns the total number of files in the zip folder.
+	 */
 	this.numberOfFiles = function(){
 		return filesInFolder.length;
 	}
 
 	/*
-	 * Read the contents of the current file.
+	 * Read the contents of the current file.  Return null if every file has 
+	 * been read by this function already.
 	 */
 	this.read = function(){
 		if(count < filesInFolder.length){
 			return fileDirectory.readAsText(filesInFolder[count++]);
 		}else{
-			console.log("You have read through all the files");
+			return null;
 		}
-
-		/*var array = [];
-		filesInFolder.forEach(function(currentEntry){
-			array.push(fileDirectory.readAsText(currentEntry));
-		});
-		return array;*/
 	}
-
-	/*
-	 * Pass the edi files to the parser portion of the back end.
-	 * This is done by passing one EDI file at a time.
-	 * Future code may include a clause that checks to make sure
-	 * the file being passed is indeed an EDI file.
-	 */
-
-	//May consider removing this function
-	/*this.parseEDI = function(){
-		filesInFolder.forEach(function(currentEntry){
-			//Pass currentEntry to the parser portion of the code
-			console.log("Feature shall be added in future updates.");
-		});
-	}*/
 }
 
 var output;
@@ -73,10 +56,6 @@ output = sample.list();
 console.log(output);
 
 //Done to test if read() goes beyond array bounds
-sample.read();
-sample.read();
-
-//output = sample.read();
-//console.log(output);
-
-//sample.parseEDI();
+if(sample.read() === null){
+	console.log("You read to the end.");
+}
