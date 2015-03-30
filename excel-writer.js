@@ -1,48 +1,33 @@
-var excelBuilder = require('msexcel-builder');
+var excelBuilder = require('node-xlsx');
 
-function ExcelWriter(fileDirectory, fileName){
-	var workbook = excelBuilder.createWorkbook(fileDirectory,fileName);
-	var data = [];
-	var columns = 0;
-	var rows = 0;
-
-	this.addData = function(newData){
-		if(!(newData instanceof Array)){
+var ExcelWriter = function(filePath){
+	this.data = [];
+	this.filePath = filePath;
+}
+/*
+ * Adds an array into the data that will be written to an Excel file.
+ * Returns null if the form of data is not an array, and doesn't add data
+ * if that is the case.  Data starts out as an empty array when the object
+ * is first constructed.
+ */
+ExcelWriter.prototype.addData = function(newData){
+	if(!(newData instanceof Array)){
 			return null;
-		}
-		data.push(newData);
-		columns++;
-		if(newData.length > rows){
-			rows = newData.length;
-		}
 	}
-
-	this.writeExcel = function(){
-		var file = workbook.createSheet('File Data',10,10/*columns,rows*/);
-
-		for(var i in data){
-			for(var j in data[i]){
-				//Write data entry into excel file
-				//The plus one is because this format uses one-indexing
-				file.set(i+1,j+1,data[i][j]);
-				//console.log('Data Entry:'+data[i][j]);
-			}
-		}
-
-		//Save the file
-		workbook.save(function(success){
-			if(!success){
-				workbook.cancel();
-				console.log('Error writing Excel file.\n');
-			}
-		});
-	}
+	this.data.push(newData);
+}
+/*
+ * Returns the data meant to be written to the Excel file.
+ */
+ExcelWriter.prototype.getData = function(){
+	return this.data;
+}
+/*
+ * Writes the data into an Excel file.
+ */
+ExcelWriter.prototype.writeFile = function(){
+	var buffer = excelBuilder.build([{name: "EDI Data", data: data}]);
+	console.log(buffer);	//Only used to test output
 }
 
-var sample = new ExcelWriter(__dirname,'Sample.csv');
-
-sample.addData(['Data Fields','Field 1','Field 2','Field 3','Field 4']);
-sample.addData(['File #1','Data 1','Company 1','Item 1','Address 1']);
-sample.addData(['File #2','Data 2','Company 2','Item 2','Address 2']);
-
-sample.writeExcel();
+module.exports = ExcelWriter;
