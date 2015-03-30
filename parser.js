@@ -44,9 +44,34 @@ Parser.prototype.get_edi_type = function(){
 	var pattern = /ST.(\d+)./;
 	var result = this.data.match(pattern);
 	console.log(result[1]);
-	return result[1];	
+	return result[1];
+	
 }
 
+//Function returns filename of needed EDI guidefile
+Parser.prototype.get_guidefile = function(edi, path){
+
+	var fs = require('fs')
+	var result = fs.readdirSync(path);
+	var current;
+	var match;
+	var date;
+	var newestDate = 0;
+	var re1 = /(\d+)./;
+	var re2 = /_(\d+)./;
+	
+	for (var i = 0; i < result.length; i++){
+		if (result[i].match(re1)[1] == edi){
+			if ((result[i].match(re2)[1]) > newestDate){
+				newestDate = result[i].match(re2)[1];
+				match = result[i];
+			}
+		}	
+	}
+	
+	console.log(match);
+	
+}
 
 //Function performs the parsing
 Parser.prototype.process_data = function(){
@@ -67,10 +92,7 @@ Parser.prototype.process_data = function(){
 module.exports = Parser;
 
 
-///all below this line is the OLD CODE////////////////
-//////////////////////////////////////////////////////
-
-/*
+/* all below this line is the OLD CODE
 
 var file = 'uploads/Fedex850.txt'; // hardcoded file for now
 var length = 0;
