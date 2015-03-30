@@ -8,3 +8,4 @@ if (p.is_valid()){
 }
 p.get_edi_type();
 p.get_guidefile("850", "./XML/");
+console.log(guideFile);

@@ -6,6 +6,8 @@ function Parser(input){
 	var recordDelim;
 	var fieldDelim;
 	var subfieldDelim;
+	var ediType;
+	var guideFile;
 
 }
 
@@ -44,7 +46,7 @@ Parser.prototype.get_edi_type = function(){
 	var pattern = /ST.(\d+)./;
 	var result = this.data.match(pattern);
 	console.log(result[1]);
-	return result[1];
+	ediType = result[1];
 	
 }
 
@@ -64,10 +66,10 @@ Parser.prototype.get_guidefile = function(edi, path){
 				newestDate = result[i].match(re2)[1];
 				match = result[i];
 			}
-		}	
+		} 	
 	}
 	
-	return match;
+	guideFile = match;
 	
 }
 
@@ -80,6 +82,14 @@ Parser.prototype.process_data = function(){
 	for (var i = 0; i < recordArr.length; i++){
 		recordArr[i] += recordDelim;
 	}
+	
+	//create object for retrieving children
+	
+	
+	//loop through recordArr populating an array of record objects
+	//with data
+	
+	
 	
 	
 	
