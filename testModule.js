@@ -1,12 +1,20 @@
-var User = function(name, email) {
-  this.name = name;
-  this.email = email;
-  console.log("something");
+var User = function(aname, anemail) {
+  this.name = aname;
+  this.email = anemail;
+  console.log("constructor");
+  var a;
+  console.log(a);
+
    
 }
 
 User.prototype.f1 = function(){
 	console.log(this.name);
+	this.a = 3;
+}
+
+User.prototype.f2 = function(){
+	console.log(this.a);
 }
 
 module.exports = User;
