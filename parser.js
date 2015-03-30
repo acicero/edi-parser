@@ -53,9 +53,7 @@ Parser.prototype.get_guidefile = function(edi, path){
 
 	var fs = require('fs')
 	var result = fs.readdirSync(path);
-	var current;
 	var match;
-	var date;
 	var newestDate = 0;
 	var re1 = /(\d+)./;
 	var re2 = /_(\d+)./;
@@ -69,7 +67,7 @@ Parser.prototype.get_guidefile = function(edi, path){
 		}	
 	}
 	
-	console.log(match);
+	return match;
 	
 }
 
