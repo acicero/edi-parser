@@ -15,7 +15,7 @@ FileManager.prototype.extract = function(){
 }
 
 /*
- * Return an array that gives the name of every file in the zip folder.
+ * Return an array that contains the name of every file in the zip folder.
  */
 FileManager.prototype.list = function(){
 	var array = [];
@@ -43,23 +43,5 @@ FileManager.prototype.read = function(){
 		return null;
 	}
 }
-
-/*The following code is test code that has been commented out
-
-var output;
-var sample = new FileManager(__dirname + "/SampleData.zip");
-
-sample.extract();
-for(var i = 0; i < sample.numberOfFiles(); i++){
-	console.log("Output for file number " + i + ":\n" + sample.read() + "\n\n");
-}
-
-output = sample.list();
-console.log(output);
-
-//Done to test if read() goes beyond array bounds
-if(sample.read() === null){
-	console.log("You read to the end.");
-}*/
 
 module.exports = FileManager;
