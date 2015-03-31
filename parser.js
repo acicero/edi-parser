@@ -83,7 +83,7 @@ Parser.prototype.process_data = function(){
 		recordArr[i] += recordDelim;
 	}
 	
-	//create object for retrieving children
+	
 	
 	
 	//loop through recordArr populating an array of record objects
@@ -170,3 +170,5 @@ function get_edi_type(data){
 }
 
 */
+
+
