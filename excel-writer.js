@@ -9,19 +9,20 @@ var ExcelWriter = function(directory,fileName){
 
 /*
  * Adds an array into the data that will be written to an Excel file.
- * Returns null if the form of data is not an array, and doesn't add data
- * if that is the case.  Data starts out as an empty array when the object
- * is first constructed.
+ * Returns false if the form of data is not an array, and doesn't add data
+ * if that is the case.  Returns true if data is an array, and adds it to
+ * the data in that case.
  */
 ExcelWriter.prototype.addData = function(newData){
 	if(!(newData instanceof Array)){
-			return null;
+			return false;
 	}
 	this.columns++;
 	if(this.rows < newData.length){
 		this.rows = newData.length;
 	}
 	this.data.push(newData);
+	return true;
 }
 
 /*
@@ -32,8 +33,7 @@ ExcelWriter.prototype.getData = function(){
 }
 
 /*
- * Writes the data into an Excel file.  Returns true when successful.
- * Returns false when it fails.
+ * Writes the data into an Excel file.
  */
 ExcelWriter.prototype.writeFile = function(){
 	var excelSheet = this.workbook.createSheet('EDI Data',

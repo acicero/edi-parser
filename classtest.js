@@ -26,7 +26,7 @@ if(fm.read() === null){
 var excelWriter = new excelBuilder(__dirname,"Sample.xlsx");
 excelWriter.addData([true,45,"Pie",false,108,"Cake"]);
 excelWriter.addData(true);
-excelWriter.addData([128,"Lord",false,""]);
+excelWriter.addData([128,"",false,"Lord"]);
 excelWriter.addData(["Orange",135,true,true,"Music"]);
 excelWriter.addData(666);
 console.log(excelWriter.getData());
