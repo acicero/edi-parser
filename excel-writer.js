@@ -1,48 +1,51 @@
 var excelBuilder = require('msexcel-builder');
 
-function ExcelWriter(fileDirectory, fileName){
-	var workbook = excelBuilder.createWorkbook(fileDirectory,fileName);
-	var data = [];
-	var columns = 0;
-	var rows = 0;
-
-	this.addData = function(newData){
-		if(!(newData instanceof Array)){
-			return null;
-		}
-		data.push(newData);
-		columns++;
-		if(newData.length > rows){
-			rows = newData.length;
-		}
-	}
-
-	this.writeExcel = function(){
-		var file = workbook.createSheet('File Data',10,10/*columns,rows*/);
-
-		for(var i in data){
-			for(var j in data[i]){
-				//Write data entry into excel file
-				//The plus one is because this format uses one-indexing
-				file.set(i+1,j+1,data[i][j]);
-				//console.log('Data Entry:'+data[i][j]);
-			}
-		}
-
-		//Save the file
-		workbook.save(function(success){
-			if(!success){
-				workbook.cancel();
-				console.log('Error writing Excel file.\n');
-			}
-		});
-	}
+var ExcelWriter = function(directory,fileName){
+	this.data = [];
+	this.workbook = excelBuilder.createWorkbook(directory,fileName);
+	this.rows = 0;
+	this.columns = 0;
 }
 
-var sample = new ExcelWriter(__dirname,'Sample.csv');
+/*
+ * Adds an array into the data that will be written to an Excel file.
+ * Returns false if the form of data is not an array, and doesn't add data
+ * if that is the case.  Returns true if data is an array, and adds it to
+ * the data in that case.
+ */
+ExcelWriter.prototype.addData = function(newData){
+	if(!(newData instanceof Array)){
+			return false;
+	}
+	this.columns++;
+	if(this.rows < newData.length){
+		this.rows = newData.length;
+	}
+	this.data.push(newData);
+	return true;
+}
 
-sample.addData(['Data Fields','Field 1','Field 2','Field 3','Field 4']);
-sample.addData(['File #1','Data 1','Company 1','Item 1','Address 1']);
-sample.addData(['File #2','Data 2','Company 2','Item 2','Address 2']);
+/*
+ * Returns the data meant to be written to the Excel file.
+ */
+ExcelWriter.prototype.getData = function(){
+	return this.data;
+}
 
-sample.writeExcel();
+/*
+ * Writes the data into an Excel file.
+ */
+ExcelWriter.prototype.writeFile = function(){
+	var excelSheet = this.workbook.createSheet('EDI Data',
+		this.columns,this.rows);
+	//The '-1' offset is because of the indexing of Excel files
+	for(var i = 1; i <= this.data.length; i++){
+		for(var j = 1; j <= this.data[i - 1].length; j++){
+			excelSheet.set(i,j,this.data[i - 1][j - 1]);
+		}
+	}
+
+	this.workbook.save(function(){});
+}
+
+module.exports = ExcelWriter;
