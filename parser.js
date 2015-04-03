@@ -76,8 +76,13 @@ Parser.prototype.get_guidefile = function(edi, path){
 	
 }
 
+
+
 //Function performs the parsing
 Parser.prototype.process_data = function(){
+	
+	var dataObjs = [];
+	//dataObjs.push(new Object());
 	
 	//check EDI file validity
 	if (!this.is_valid()){
@@ -103,13 +108,48 @@ Parser.prototype.process_data = function(){
 		recordArr[i] += this.recordDelim;
 	}
 
-
-	
 	//create jsonEDI searching object
+	//this is where I'd create a jsonEDI object...
+	//IF I HAD ONE!!!
+	//HEY ANDREW.
+	for (var i = 0; i < recordArr.length; i++){
+		
+		var myPath;
+		var myData;
+		var myFields = [];
+		var fieldObj = {};
+		var myFieldObjs = [];
+		var myChildren = [];
+		
+		//get path value depending on if its a child or not
+		if (typeof dataObjs[i] === "undefined"){
+			
+			myPath = recordArr[i].split(this.fieldDelim)[0];
+			
+		} else myPath = myPath + recordDelim + recordArr[i].split(this.fieldDelim)[0]; 
+		
+		myData = recordArr[i];
+		
+		myFields = recordArr[i].split(this.fieldDelim);
+		
+		
+		//NOTE: NOT HANDLING SUBFIELDS RIGHT NOW
+		//NEED TO SEE THEM IN A FILE TO BE CERTAIN HOW THEY ARE FORMATTED
+		
+		
+		//assign values to the object
+		fieldObj.path = myPath;
+		fieldObj.data = myData;
+		fieldObj.fields = myFields;
+		
+		dataObjs.push(fieldObj);
+			
+		
+		
+	}
 	
-	
-	//loop through recordArr populating an array of record objects
-	//with data
+	console.log(dataObjs);
+
 	
 	
 	
