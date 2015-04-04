@@ -1,4 +1,4 @@
-var exports.getChildren = function (object, segmentID){
+exports.getChildren = function getChildren (object, segmentID){
 	var children = [];
 	if((loop = getLoopName(object)) != undefined){
 		if(loop == segmentID){
@@ -13,11 +13,10 @@ var exports.getChildren = function (object, segmentID){
 			}
 			return children;
 		} else {
-			console.log(object['Children'][0])
 			children = getChildren(object['Children'][0]['Object'], segmentID);
 			return children;
 		}
-	} elmuse{
+	} else{
 		if(object['Type'] == "Segment" && object['ID'] == segmentID){
 			children = [];
 			return children;
@@ -34,7 +33,8 @@ var exports.getChildren = function (object, segmentID){
 	}
 }
 
-var getLoopName  = function (object){
+
+function getLoopName (object){
 	if(object.hasOwnProperty('$') && object['$'].hasOwnProperty('Type') && object['$']['Type'] == "Loop"){
 		var loop = object.Attributes[0].SimpleAttribute;
 		for(var attribute in loop){
@@ -44,4 +44,11 @@ var getLoopName  = function (object){
 		}
 	}
 	return undefined;
+}
+
+
+exports.getGuidefile = function getGuidefile(path){
+	var fs = require('fs')
+	var result = JSON.parse(fs.readFileSync(path, 'utf8'));
+	return result;
 }
