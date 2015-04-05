@@ -196,9 +196,9 @@ Parser.prototype.process_data = function(){
 }
 
 //outputs the array of paths for UI selection
-Parser.prototype.output_1 = function(){
+Parser.prototype.output_1 = function(data){
 	var outArr = [];
-	var dataObjs = this.process_data();
+	var dataObjs = data;
 	for (var i = 0; i < dataObjs.length; i++){
 		outArr.push(dataObjs[i].path);
 	}
@@ -206,8 +206,41 @@ Parser.prototype.output_1 = function(){
 	
 }
 
-Parser.prototype.user_input = function(arr){
-	var inputArr = arr;
+Parser.prototype.user_input = function(selection, data){
+	var inputArr = selection;
+	var objData = data;
+	var outputPaths = [];
+	var outputData = [];
+	var out2DArr = [];
+	console.log("test");
+	
+	if (inputArr.length == 0){
+		console.log("input array was empty");
+		return;
+	}
+	
+	//make a new object array of the selected records
+	
+	//for each item in inputArr
+	for (var i = 0; i < inputArr.length; i++){
+		
+		for (var j = 0; j < objData.length; j++){
+			console.log("inputArr[i]: " + inputArr[i]);
+			console.log("dataObjs[j]: " + objData[j]);
+			if (inputArr[i] == objData[j].path){
+				outputPaths.push(inputArr[i]);
+				outputData.push(objData[j].data);
+			}
+		}
+		
+	}
+	out2DArr.push(outputPaths);
+	out2DArr.push(outputData);
+	
+	console.log(out2DArr);
+	
+	return out2DArr;
+		
 	
 	
 }
