@@ -97,7 +97,7 @@ Parser.prototype.process_data = function(){
 	this.subFieldDelim = delims[2];
 	this.recordDelim = delims[3];
 	this.ediType = this.get_edi_type();
-	this.guideFile = this.get_guidefile(this.ediType, "./XML/");
+	//this.guideFile = this.get_guidefile(this.ediType, "./XML/");
 
 	// put records into array
 	var recordArr = this.data.split(this.recordDelim);
@@ -107,26 +107,31 @@ Parser.prototype.process_data = function(){
 	for (var i = 0; i < recordArr.length; i++){
 		recordArr[i] += this.recordDelim;
 	}
-
+	
+	var o = this;
 	//create jsonEDI searching object
-	//this is where I'd create a jsonEDI object...
-	//IF I HAD ONE!!!
-	//HEY ANDREW.
+	var guide = require("./jsonedi.js");
+	var file = guide.getGuidefile("./XML/850_004010.json"); //HARDCODED, FIX LATER
+	
+	//loop through each record
 	for (var i = 0; i < recordArr.length; i++){
 		
 		var myPath;
+		var mySegment
 		var myData;
 		var myFields = [];
 		var fieldObj = {};
 		var myFieldObjs = [];
 		var myChildren = [];
 		
+		mySegment = recordArr[i].split(this.fieldDelim)[0];
+		
 		//get path value depending on if its a child or not
 		if (typeof dataObjs[i] === "undefined"){
 			
-			myPath = recordArr[i].split(this.fieldDelim)[0];
+			myPath = mySegment;
 			
-		} else myPath = myPath + recordDelim + recordArr[i].split(this.fieldDelim)[0]; 
+		} else myPath = myPath + mySegment; 
 		
 		myData = recordArr[i];
 		
@@ -142,18 +147,44 @@ Parser.prototype.process_data = function(){
 		fieldObj.data = myData;
 		fieldObj.fields = myFields;
 		
-		dataObjs.push(fieldObj);
+		//check for children
+		
+		var children = guide.getChildren(file, mySegment);
+		//console.log(children);
+		
+		if (children.length > 0){
+			//console.log("has children");
 			
-		
-		
+			var j = i+1;
+			var lookingAhead = true;
+			while(lookingAhead){
+				console.log("lookingAhead");
+				var nextRecord = recordArr[j];
+				console.log(nextRecord);
+				var nextSegment = nextRecord.split(this.fieldDelim)[0];
+				console.log(nextSegment);
+				var matches = false;
+				//note, loop starts at one because children[0] is the
+				//same as the segment that was called
+				
+				for (var k = 1; k < children.length; k++){
+					console.log("in for loop"); 
+					if (nextSegment == children[i]){
+						console.log("next Segment: " + nextSegment)
+						console.log("children[i]: " + children[i]);
+
+						matches = true;
+						dataObjs[j].path = mySegment + this.recordDelim + nextSegment;
+						break;
+					}
+				} lookingAhead = matches;
+	
+			}
+		}
+		dataObjs[i] = fieldObj;	
 	}
 	
-	console.log(dataObjs);
-
-	
-	
-	
-	
+	//console.log(dataObjs);
 	
 }
 //export the class
