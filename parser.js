@@ -169,9 +169,12 @@ Parser.prototype.process_data = function(){
 				
 				for (var k = 1; k < children.length; k++){
 					console.log("in for loop"); 
+					console.log("next Segment: " + nextSegment);
+					console.log("children[k]: " + children[k]);
+
 					if (nextSegment == children[i]){
-						console.log("next Segment: " + nextSegment)
-						console.log("children[i]: " + children[i]);
+						console.log("comparison passed");
+
 
 						matches = true;
 						dataObjs[j].path = mySegment + this.recordDelim + nextSegment;
