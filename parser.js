@@ -158,37 +158,60 @@ Parser.prototype.process_data = function(){
 			var j = i+1;
 			var lookingAhead = true;
 			while(lookingAhead){
-				console.log("lookingAhead");
+
 				var nextRecord = recordArr[j];
-				console.log(nextRecord);
+
 				var nextSegment = nextRecord.split(this.fieldDelim)[0];
-				console.log(nextSegment);
+
 				var matches = false;
 				//note, loop starts at one because children[0] is the
 				//same as the segment that was called
 				
 				for (var k = 1; k < children.length; k++){
-					console.log("in for loop"); 
-					console.log("next Segment: " + nextSegment);
-					console.log("children[k]: " + children[k]);
 
-					if (nextSegment == children[i]){
-						console.log("comparison passed");
-
-
+					//console.log("next Segment: " + nextSegment);
+					//console.log("children[k]: " + children[k]);
+					if (nextSegment == children[k]){
 						matches = true;
-						dataObjs[j].path = mySegment + this.recordDelim + nextSegment;
+						var nextPath = mySegment + this.recordDelim + nextSegment;
+						var nextObj = {}
+						nextObj.path = nextPath;
+						dataObjs[j] = nextObj;
+						//console.log(nextObj);
+
 						break;
 					}
-				} lookingAhead = matches;
-	
+				} 
+				
+				j++;
+				lookingAhead = matches;
 			}
 		}
 		dataObjs[i] = fieldObj;	
 	}
 	
-	//console.log(dataObjs);
+	console.log(dataObjs);
+	return dataObjs;
 	
 }
+
+//outputs the array of paths for UI selection
+Parser.prototype.output_1 = function(){
+	var outArr = [];
+	var dataObjs = this.process_data();
+	for (var i = 0; i < dataObjs.length; i++){
+		outArr.push(dataObjs[i].path);
+	}
+	return outArr;
+	
+}
+
+Parser.prototype.user_input = function(arr){
+	var inputArr = arr;
+	
+	
+}
+	
+
 //export the class
 module.exports = Parser;
