@@ -5,6 +5,14 @@ var p = new Parser("ISA*00*          *00*          *ZZ*FXK            *ZZ*ODXPED
 var dataObjs = p.process_data();
 p.output_1(dataObjs);
 
-var arr = ["ISA", "PO1CURPIDSAC"]
+var arr = ["ISA", "ST","PO1CURPIDSAC"]
 
-p.user_input(arr, dataObjs);
+data = p.user_input(arr, dataObjs);
+
+var excelBuilder = require('./excel-writer.js');
+
+var e = new excelBuilder('./uploads', '850_1.xls');
+e.addData(data[0]);
+e.addData(data[1]);
+
+e.writeFile();

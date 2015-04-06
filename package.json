@@ -11,6 +11,7 @@
     "jade": "^0.31.2",
     "method-override": "^1.0.0",
     "morgan": "^1.0.0",
+    "msexcel-builder": "0.0.2",
     "multer": "^0.1.7",
     "xml2js": "^0.4.5"
   }

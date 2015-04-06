@@ -1,0 +1,13 @@
+extends layout
+block body 
+  h1= 'Paths'
+  p Select Paths to add to excel
+  form(action='/excel', method='post')
+    div
+      button.btn(type='submit') Submit
+      table
+        each segment, i in data
+          tr
+            td #{segment}
+            td 
+              input(type='checkbox', name=#{segment})
