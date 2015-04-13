@@ -8,7 +8,7 @@ function Parser(input){
 	var subfieldDelim;
 	var ediType;
 	var guideFile;
-	var guideFilePath = "./XML/";
+	var guideFilePath = __dirname + "Guidefiles/";
 
 }
 
@@ -55,23 +55,20 @@ Parser.prototype.get_edi_type = function(){
 
 //Function returns filename of needed EDI guidefile
 Parser.prototype.get_guidefile = function(edi, path){
-
 	var fs = require('fs');
 	var result = fs.readdirSync(path);
 	var match;
-	var newestDate = 0;
 	var re1 = /(\d+)./;
-	var re2 = /_(\d+)./;
+	//var re2 = /_(\d+)./;
 	
 	for (var i = 0; i < result.length; i++){
+		if(result[i].match(re1) === null){ //if match returns null (looking at YOU, ".DS_Store" !!!)
+			continue;
+		}
 		if (result[i].match(re1)[1] == edi){
-			if ((result[i].match(re2)[1]) > newestDate){
-				newestDate = result[i].match(re2)[1];
-				match = result[i];
-			}
+				match = result[i];		
 		} 	
 	}
-	
 	return match;
 	
 }
@@ -97,7 +94,8 @@ Parser.prototype.process_data = function(){
 	this.subFieldDelim = delims[2];
 	this.recordDelim = delims[3];
 	this.ediType = this.get_edi_type();
-	//this.guideFile = this.get_guidefile(this.ediType, "./XML/");
+	this.guideFile = this.get_guidefile(this.ediType, path);
+
 
 	// put records into array
 	var recordArr = this.data.split(this.recordDelim);
@@ -111,7 +109,8 @@ Parser.prototype.process_data = function(){
 	var o = this;
 	//create jsonEDI searching object
 	var guide = require("./jsonedi.js");
-	var file = guide.getGuidefile("./XML/850_004010.json"); //HARDCODED, FIX LATER
+	
+	var file = guide.readGuidefile(this.guideFile); // CHECK TO VERIFY NOT BROKEN
 	
 	//loop through each record
 	for (var i = 0; i < recordArr.length; i++){
