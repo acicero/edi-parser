@@ -4,6 +4,7 @@ var FileManager = function(directoryParameter){
 	this.fileDirectory = new admZip(directoryParameter);
 	this.filesInFolder = this.fileDirectory.getEntries();
 	this.count = 0;
+	this.fileNames = this.list();
 }
 
 /*
@@ -37,8 +38,11 @@ FileManager.prototype.numberOfFiles = function(){
  * been read by this function already.
  */
 FileManager.prototype.read = function(){
+	var array = [];
 	if(this.count < this.filesInFolder.length){
-		return this.fileDirectory.readAsText(this.filesInFolder[this.count++]);
+		array.push(this.fileNames[this.count]);
+		array.push(this.fileDirectory.readAsText(this.filesInFolder[this.count++]));
+		return array;
 	}else{
 		return null;
 	}
