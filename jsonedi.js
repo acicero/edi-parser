@@ -48,7 +48,7 @@ function getLoopName (object){
 
 
 exports.readGuidefile = function readGuidefile(path){
-	console.log("Path is: " + path);
+
 	var fs = require('fs')
 	var result = JSON.parse(fs.readFileSync(path, 'utf8'));
 	return result;
