@@ -1,6 +1,7 @@
 /*Edi parser*/
 /* Takes an edi file as argument to constructor*/
-function Parser(input){
+function Parser(file, input){
+	this.fileName = file;
 	this.data = input;
 	var length = 0;
 	var recordDelim;
@@ -73,14 +74,11 @@ Parser.prototype.get_guidefile = function(edi, path){
 	
 }
 
-
-
 //Function performs the parsing
 Parser.prototype.process_data = function(){
 	
 	var dataObjs = [];
 
-	
 	//check EDI file validity
 	if (!this.is_valid()){
 		console.log("error");
@@ -194,11 +192,12 @@ Parser.prototype.process_data = function(){
 		}
 
 		dataObjs[i] = fieldObj;	
+		dataObjs[i].fileName = this.fileName;
 
 
 	}
 	
-	//console.log(dataObjs);
+	
 	return dataObjs;
 	
 }
@@ -206,6 +205,7 @@ Parser.prototype.process_data = function(){
 //outputs the array of paths for UI selection
 Parser.prototype.output_1 = function(data){
 	var outArr = [];
+	var outArr = []
 	var dataObjs = data;
 	var fieldIndex;
 	for (var i = 0; i < dataObjs.length; i++){
@@ -214,10 +214,10 @@ Parser.prototype.output_1 = function(data){
 					fieldIndex = "0" + j;
 				}
 				else fieldIndex = String(j);
-				outArr.push(dataObjs[i].path + fieldIndex);
+				outArr.push(dataObjs[i].path + "-" + fieldIndex);
 		}
 	}
-	console.log(outArr);
+
 	return outArr;
 	
 }
@@ -250,18 +250,19 @@ Parser.prototype.user_input = function(selection, data){
 			thePathLength = inputArr[i].length;
 			thePath = inputArr[i].substring(0, thePathLength-3); //gets the path without field number
 			if (thePath == objData[j].path){
-				fieldNum = inputArr[i].substring(thePathLength-2, thePathLength-1);
+				fieldNum = inputArr[i].substring(thePathLength-2, thePathLength);
 				outputPaths.push(inputArr[i]);
-				outputData.push(objData[j].fields[Number(fieldNum-1)]);
+				outputData.push(objData[j].fields[Number(fieldNum)]);
 			}
 		}
 		
+		
 	}
 	out2DArr.push(outputPaths);
+	//console.log(outputPaths);
 	out2DArr.push(outputData);
 	
-	//console.log(out2DArr);
-	
+	console.log(out2DArr);
 	return out2DArr;
 		
 	
