@@ -106,9 +106,7 @@ Parser.prototype.process_data = function(){
 	for (var i = 0; i < recordArr.length; i++){
 		recordArr[i] += this.recordDelim;
 	}
-	
-	//don't think this is used
-	//var o = this;
+
 	
 	//create jsonEDI searching object
 	var guide = require("./jsonedi.js");
@@ -127,13 +125,17 @@ Parser.prototype.process_data = function(){
 		var myChildren = [];
 		
 		mySegment = recordArr[i].split(this.fieldDelim)[0];
+		//console.log(recordArr[i].split(this.fieldDelim));
 		
 		//get path value depending on if its a child or not
 		if (typeof dataObjs[i] === "undefined"){
 			
 			myPath = mySegment;
 			
-		} else myPath = myPath + mySegment; 
+		} else 
+			{
+				myPath = dataObjs[i].path;
+			}
 		
 		myData = recordArr[i];
 		
@@ -141,7 +143,7 @@ Parser.prototype.process_data = function(){
 		
 		
 		//NOTE: NOT HANDLING SUBFIELDS RIGHT NOW
-		//NEED TO SEE THEM IN A FILE TO BE CERTAIN HOW THEY ARE FORMATTED
+
 		
 		
 		//assign values to the object
@@ -152,7 +154,6 @@ Parser.prototype.process_data = function(){
 		//check for children
 		
 		var children = guide.getChildren(file, mySegment);
-		//console.log(children);
 		
 		if (children.length > 0){
 			//console.log("has children");
@@ -175,11 +176,13 @@ Parser.prototype.process_data = function(){
 					//console.log("children[k]: " + children[k]);
 					if (nextSegment == children[k]){
 						matches = true;
-						var nextPath = mySegment + this.recordDelim + nextSegment;
-						var nextObj = {}
+						var nextPath = myPath + "." + nextSegment;
+						var nextObj = {};
 						nextObj.path = nextPath;
 						dataObjs[j] = nextObj;
 						//console.log(nextObj);
+
+						//console.log(dataObjs[j]);
 
 						break;
 					}
@@ -189,10 +192,13 @@ Parser.prototype.process_data = function(){
 				lookingAhead = matches;
 			}
 		}
+
 		dataObjs[i] = fieldObj;	
+
+
 	}
 	
-	console.log(dataObjs);
+	//console.log(dataObjs);
 	return dataObjs;
 	
 }
@@ -225,7 +231,6 @@ Parser.prototype.user_input = function(selection, data){
 	var thePathLength;
 	var thePath;
 	var fieldNum;
-	console.log("test");
 	
 	if (inputArr.length == 0){
 		console.log("input array was empty");
@@ -240,8 +245,8 @@ Parser.prototype.user_input = function(selection, data){
 	for (var i = 0; i < inputArr.length; i++){
 		
 		for (var j = 0; j < objData.length; j++){
-			console.log("inputArr[i]: " + inputArr[i]);
-			console.log("dataObjs[j]: " + objData[j]);
+			//console.log("inputArr[i]: " + inputArr[i]);
+			//console.log("dataObjs[j]: " + objData[j]);
 			thePathLength = inputArr[i].length;
 			thePath = inputArr[i].substring(0, thePathLength-3); //gets the path without field number
 			if (thePath == objData[j].path){
@@ -255,7 +260,7 @@ Parser.prototype.user_input = function(selection, data){
 	out2DArr.push(outputPaths);
 	out2DArr.push(outputData);
 	
-	console.log(out2DArr);
+	//console.log(out2DArr);
 	
 	return out2DArr;
 		
