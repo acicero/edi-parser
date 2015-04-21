@@ -79,7 +79,7 @@ Parser.prototype.get_guidefile = function(edi, path){
 Parser.prototype.process_data = function(){
 	
 	var dataObjs = [];
-	//dataObjs.push(new Object());
+
 	
 	//check EDI file validity
 	if (!this.is_valid()){
@@ -94,7 +94,8 @@ Parser.prototype.process_data = function(){
 	this.subFieldDelim = delims[2];
 	this.recordDelim = delims[3];
 	this.ediType = this.get_edi_type();
-	this.guideFile = this.get_guidefile(this.ediType, path);
+	//console.log(this.guideFilePath);
+	this.guideFile = this.get_guidefile(this.ediType, __dirname + "/Guidefiles/");
 
 
 	// put records into array
@@ -106,11 +107,13 @@ Parser.prototype.process_data = function(){
 		recordArr[i] += this.recordDelim;
 	}
 	
-	var o = this;
+	//don't think this is used
+	//var o = this;
+	
 	//create jsonEDI searching object
 	var guide = require("./jsonedi.js");
 	
-	var file = guide.readGuidefile(this.guideFile); // CHECK TO VERIFY NOT BROKEN
+	var file = guide.readGuidefile(__dirname + "/Guidefiles/" + this.guideFile); // CHECK TO VERIFY NOT BROKEN
 	
 	//loop through each record
 	for (var i = 0; i < recordArr.length; i++){
@@ -198,9 +201,17 @@ Parser.prototype.process_data = function(){
 Parser.prototype.output_1 = function(data){
 	var outArr = [];
 	var dataObjs = data;
+	var fieldIndex;
 	for (var i = 0; i < dataObjs.length; i++){
-		outArr.push(dataObjs[i].path);
+		for(var j = 0; j < dataObjs[i].fields.length; j++){
+				if (j < 10){
+					fieldIndex = "0" + j;
+				}
+				else fieldIndex = String(j);
+				outArr.push(dataObjs[i].path + fieldIndex);
+		}
 	}
+	console.log(outArr);
 	return outArr;
 	
 }
@@ -211,6 +222,9 @@ Parser.prototype.user_input = function(selection, data){
 	var outputPaths = [];
 	var outputData = [];
 	var out2DArr = [];
+	var thePathLength;
+	var thePath;
+	var fieldNum;
 	console.log("test");
 	
 	if (inputArr.length == 0){
@@ -221,14 +235,19 @@ Parser.prototype.user_input = function(selection, data){
 	//make a new object array of the selected records
 	
 	//for each item in inputArr
+	
+	
 	for (var i = 0; i < inputArr.length; i++){
 		
 		for (var j = 0; j < objData.length; j++){
 			console.log("inputArr[i]: " + inputArr[i]);
 			console.log("dataObjs[j]: " + objData[j]);
-			if (inputArr[i] == objData[j].path){
+			thePathLength = inputArr[i].length;
+			thePath = inputArr[i].substring(0, thePathLength-3); //gets the path without field number
+			if (thePath == objData[j].path){
+				fieldNum = inputArr[i].substring(thePathLength-2, thePathLength-1);
 				outputPaths.push(inputArr[i]);
-				outputData.push(objData[j].data);
+				outputData.push(objData[j].fields[Number(fieldNum-1)]);
 			}
 		}
 		
