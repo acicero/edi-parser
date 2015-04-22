@@ -1,8 +1,10 @@
 /*Edi parser*/
-/* Takes an edi file as argument to constructor*/
-function Parser(file, input){
-	this.fileName = file;
-	this.data = input;
+/* Takes a 2D array to the constructor where*/
+/* 2DArray[0] is the filename and */
+/* 2DArray[1] is the string of data */
+function Parser(arr){
+	this.fileName = arr[0];
+	this.data = arr[1];
 	var length = 0;
 	var recordDelim;
 	var fieldDelim;
