@@ -233,6 +233,7 @@ Parser.prototype.user_input = function(selection, data){
 	var thePathLength;
 	var thePath;
 	var fieldNum;
+	var outputFileNames = [];
 	
 	if (inputArr.length == 0){
 		console.log("input array was empty");
@@ -255,6 +256,7 @@ Parser.prototype.user_input = function(selection, data){
 				fieldNum = inputArr[i].substring(thePathLength-2, thePathLength);
 				outputPaths.push(inputArr[i]);
 				outputData.push(objData[j].fields[Number(fieldNum)]);
+				outputFileNames.push(objData[j].fileName);
 			}
 		}
 		
@@ -263,8 +265,9 @@ Parser.prototype.user_input = function(selection, data){
 	out2DArr.push(outputPaths);
 	//console.log(outputPaths);
 	out2DArr.push(outputData);
+	out2DArr.push(outputFileNames);
 	
-	console.log(out2DArr);
+	//console.log(out2DArr);
 	return out2DArr;
 		
 	
